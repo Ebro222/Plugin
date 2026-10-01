@@ -1,0 +1,50 @@
+package de.example.gildplugin;
+
+import org.bukkit.entity.Player;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class GuildManager {
+    private final GildPlugin plugin;
+    private final List<Guild> guilds = new ArrayList<>();
+
+    public GuildManager(GildPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    public Guild createGuild(String name, Player leader) {
+        if (getGuildByName(name) != null) {
+            leader.sendMessage("§cEine Gilde mit diesem Namen existiert bereits!");
+            return null;
+        }
+        Guild newGuild = new Guild(name, leader.getUniqueId());
+        guilds.add(newGuild);
+        leader.sendMessage("§aGilde '" + name + "' wurde erstellt! Du bist der Anführer.");
+        return newGuild;
+    }
+
+    public Guild getGuildByName(String name) {
+        for (Guild g : guilds) {
+            if (g.getName().equalsIgnoreCase(name)) return g;
+        }
+        return null;
+    }
+
+    public Guild getGuildByPlayer(UUID playerUuid) {
+        for (Guild g : guilds) {
+            if (g.isMember(playerUuid)) return g;
+        }
+        return null;
+    }
+
+    public List<Guild> getGuilds() { return guilds; }
+
+    public boolean inviteMember(Guild guild, Player target) {
+        if (guild.addMember(target.getUniqueId())) {
+            target.sendMessage("§aDu wurdest zur Gilde " + guild.getName() + " hinzugefügt.");
+            return true;
+        }
+        return false;
+    }
+}
