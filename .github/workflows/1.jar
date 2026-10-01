@@ -1,0 +1,69 @@
+package de.example.gildplugin;
+
+import java.util.*;
+
+public class Guild {
+    private final String name;
+    private final UUID leaderId;
+    private final List<UUID> members;
+    private final Set<String> claims;
+    private final Map<String, String> teleports;
+
+    public Guild(String name, UUID leaderId) {
+        this.name = name;
+        this.leaderId = leaderId;
+        this.members = new ArrayList<>();
+        this.members.add(leaderId);
+        this.claims = new HashSet<>();
+        this.teleports = new HashMap<>();
+    }
+
+    public boolean addMember(UUID playerUuid) {
+        if (members.size() >= 10) return false;
+        return members.add(playerUuid);
+    }
+
+    public boolean removeMember(UUID playerUuid) {
+        return members.remove(playerUuid);
+    }
+
+    public boolean isMember(UUID playerUuid) {
+        return members.contains(playerUuid);
+    }
+
+    public boolean isLeader(UUID playerUuid) {
+        return leaderId.equals(playerUuid);
+    }
+
+    public boolean addClaim(String chunkKey) {
+        return claims.add(chunkKey);
+    }
+
+    public void removeClaim(String chunkKey) {
+        claims.remove(chunkKey);
+    }
+
+    public boolean hasClaim(String chunkKey) {
+        return claims.contains(chunkKey);
+    }
+
+    public Set<String> getClaims() { return claims; }
+
+    public void addTeleport(String name, String locationString) {
+        teleports.put(name.toLowerCase(), locationString);
+    }
+
+    public String getTeleport(String name) {
+        return teleports.get(name.toLowerCase());
+    }
+
+    public void removeTeleport(String name) {
+        teleports.remove(name.toLowerCase());
+    }
+
+    public Map<String, String> getTeleports() { return teleports; }
+
+    public String getName() { return name; }
+    public UUID getLeaderId() { return leaderId; }
+    public List<UUID> getMembers() { return members; }
+}
